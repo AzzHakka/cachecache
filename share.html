@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Partager ma position</title>
 
+<style>
+body{
+    font-family:Arial;
+    text-align:center;
+    margin-top:50px;
+}
+button{
+    padding:15px 25px;
+    font-size:18px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Partage de position</h2>
+
+<p id="status">Appuie sur le bouton pour partager ta position</p>
+
+<button onclick="start()">Activer</button>
+
+
+<script type="module">
+
+import { sendPosition } from "./firebase.js";
+
+
+window.start = function(){
+
+    if(!navigator.geolocation){
+
+        document.getElementById("status").innerHTML =
+        "GPS non disponible";
+
+        return;
+    }
+
+
+    document.getElementById("status").innerHTML =
+    "Recherche de position...";
+
+
+    navigator.geolocation.watchPosition(
+
+        (pos)=>{
+
+            let lat = pos.coords.latitude;
+            let lng = pos.coords.longitude;
+
+
+            sendPosition(lat,lng);
+
+
+            document.getElementById("status").innerHTML =
+            "Position partagée ✔<br>" +
+            lat.toFixed(5) + ", " +
+            lng.toFixed(5);
+
+        },
+
+
+        (err)=>{
+
+            document.getElementById("status").innerHTML =
+            "Erreur GPS : " + err.message;
+
+        },
+
+
+        {
+            enableHighAccuracy:true,
+            maximumAge:5000,
+            timeout:10000
+        }
+
+    );
+
+}
+
+</script>
+
+</body>
+</html>

@@ -25,11 +25,14 @@ const db = getDatabase(app);
 
 export function sendPosition(lat,lng){
 
+    console.log("Envoi Firebase :", lat, lng);
+
     set(ref(db,"position"),{
         lat: lat,
         lng: lng,
-        time: Date.now()
-    })
+        timestamp: Date.now()
+    });
+
     .then(()=>{
         console.log("Position envoyée");
     })

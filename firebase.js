@@ -1,9 +1,11 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { 
+  getDatabase,
+  ref,
+  set
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
   apiKey: "AIzaSyDG2_YoKzfwwF9FHb4fohaOCjS8yTVPmCM",
   authDomain: "cachecache-467ce.firebaseapp.com",
@@ -14,5 +16,21 @@ const firebaseConfig = {
   appId: "1:662374954362:web:f67e817d76f56dc73612c3"
 };
 
-// Initialize Firebase
+
+
+// Connexion Firebase
 const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+
+// Fonction pour envoyer une position
+export function sendPosition(lat,lng){
+
+  set(ref(db,"position"),{
+    lat: lat,
+    lng: lng,
+    time: Date.now()
+  });
+
+}
+

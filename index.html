@@ -1,1 +1,126 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Localisation</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+<style>
+html,body,#map{
+    height:100%;
+    margin:0;
+}
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+const firebaseConfig = {
+  apiKey: "TON_API_KEY",
+  authDomain: "TON_PROJET.firebaseapp.com",
+  databaseURL: "https://TON_PROJET-default-rtdb.firebaseio.com",
+  projectId: "TON_PROJET"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+
+// Carte
+const map = L.map("map").setView([48.8566,2.3522],16);
+
+L.tileLayer(
+"https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+).addTo(map);
+
+
+let marker;
+let circle;
+
+
+// Génère un point aléatoire dans un rayon de 100m
+function randomPoint(lat,lng){
+
+    let angle=Math.random()*Math.PI*2;
+    let distance=Math.sqrt(Math.random())*100;
+
+    let latOffset=(distance*Math.sin(angle))/111320;
+    let lngOffset=(distance*Math.cos(angle))/
+    (111320*Math.cos(lat*Math.PI/180));
+
+    return {
+        lat:lat+latOffset,
+        lng:lng+lngOffset
+    };
+}
+
+
+// Écoute Firebase
+onValue(ref(db,"position"),snap=>{
+
+    let data=snap.val();
+
+    if(!data) return;
+
+
+    let fake=randomPoint(
+        data.lat,
+        data.lng
+    );
+
+
+    if(!marker){
+
+        marker=L.marker([
+            fake.lat,
+            fake.lng
+        ]).addTo(map);
+
+
+        circle=L.circle([
+            fake.lat,
+            fake.lng
+        ],{
+            radius:100
+        }).addTo(map);
+
+
+        map.setView([
+            fake.lat,
+            fake.lng
+        ],16);
+
+
+    }else{
+
+        marker.setLatLng([
+            fake.lat,
+            fake.lng
+        ]);
+
+        circle.setLatLng([
+            fake.lat,
+            fake.lng
+        ]);
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

@@ -28,16 +28,14 @@ export function sendPosition(lat,lng){
     console.log("Envoi Firebase :", lat, lng);
 
     set(ref(db,"position"),{
-        lat: lat,
-        lng: lng,
-        timestamp: Date.now()
-    });
-
-    .then(()=>{
-        console.log("Position envoyée");
-    })
-    .catch((error)=>{
-        console.error("Erreur Firebase :",error);
-    });
+    lat: lat,
+    lng: lng
+})
+.then(()=>{
+    console.log("Envoyé !");
+})
+.catch((error)=>{
+    console.error("Erreur Firebase :", error);
+});
 
 }

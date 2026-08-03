@@ -74,6 +74,8 @@ function randomPoint(lat,lng){
 // Écoute Firebase
 onValue(ref(db,"position"),snap=>{
 
+    console.log("Firebase reçu :", snap.val());
+
     let data=snap.val();
 
     if(!data) return;
